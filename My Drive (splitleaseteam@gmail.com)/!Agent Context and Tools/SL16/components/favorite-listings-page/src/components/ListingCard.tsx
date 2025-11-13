@@ -1,6 +1,7 @@
 /**
- * ListingCard Component
- * Displays a single listing card with photo, details, and favorite button
+ * ListingCard Component (Enhanced)
+ * Displays a single listing card matching Bubble.io design
+ * Includes: Photo carousel, Proposal badge, Host profile, Action buttons
  * Implements all conditional logic from Bubble design
  */
 
@@ -68,10 +69,30 @@ const ListingCard: React.FC<ListingCardProps> = ({
     ? getProcessedImageUrl(photos[imageIndex].url, 400, 300)
     : '';
 
+  // Mock data for host and proposal (in production, this would come from the listing data)
+  const hasProposal = listing.id.includes('1'); // Mock logic
+  const hostName = 'Charlie S';
+  const hostInitial = hostName.charAt(0);
+  const isHostVerified = true;
+  const guestCapacity = listing.features.maxGuests || 2;
+  const originalPrice = Math.floor(listing.listerPriceDisplay * 1.4); // Mock original price
+
+  const handleSendMessage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('Send message to host');
+    // In production: Open message modal
+  };
+
+  const handleViewProposal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('View proposal');
+    // In production: Navigate to proposal page
+  };
+
   return (
-    <div className="listing-card" onClick={handleCardClick}>
+    <div className="listing-card-enhanced">
       {/* Photo Section */}
-      <div className="listing-photo-container">
+      <div className="listing-photo-container-enhanced">
         {!imageError && mainPhotoUrl ? (
           <img
             src={mainPhotoUrl}
@@ -95,6 +116,17 @@ const ListingCard: React.FC<ListingCardProps> = ({
             </svg>
           </div>
         )}
+
+        {/* Proposal Badge (Top Left) */}
+        {hasProposal && (
+          <div className="proposal-badge">
+            <div className="proposal-ribbon"></div>
+            <div className="proposal-text">Proposal</div>
+          </div>
+        )}
+
+        {/* New Listing Badge */}
+        <div className="new-listing-badge">New Listing</div>
 
         {/* Photo Navigation Arrows */}
         {hasMultiplePhotos && (
@@ -125,8 +157,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         )}
 
-        {/* Favorite Button */}
-        <div className="favorite-button-container">
+        {/* Favorite Button (Top Right) */}
+        <div className="favorite-button-container-enhanced">
           <FavoriteButton
             listingId={listing.id}
             isFavorited={listing.isFavorited}
@@ -136,42 +168,76 @@ const ListingCard: React.FC<ListingCardProps> = ({
       </div>
 
       {/* Details Section */}
-      <div className="listing-details">
-        {/* Location and Price Row */}
-        <div className="listing-header">
-          <div className="listing-location">
-            {locationText}
-          </div>
-          <div className="listing-price">
-            {priceText}
-          </div>
+      <div className="listing-details-enhanced">
+        {/* Location */}
+        <div className="listing-location-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span>{locationText}</span>
         </div>
 
         {/* Listing Name */}
-        <h3 className="listing-name">
+        <h3 className="listing-name-enhanced" onClick={handleCardClick}>
           {listing.name}
         </h3>
 
-        {/* Bedroom/Bathroom/Kitchen Info */}
+        {/* Guest Capacity */}
+        <div className="listing-capacity">
+          {listing.features.typeOfSpace || 'Entire Place'} - {guestCapacity} guests max
+        </div>
+
+        {/* Features */}
         {bedroomBathroomText && (
-          <div className="listing-features">
+          <div className="listing-features-enhanced">
             {bedroomBathroomText}
           </div>
         )}
 
-        {/* Type of Space */}
-        {listing.features.typeOfSpace && (
-          <div className="listing-type">
-            {listing.features.typeOfSpace}
+        {/* Host Profile and Pricing Section */}
+        <div className="listing-footer">
+          {/* Host Profile */}
+          <div className="host-profile">
+            <div className="host-avatar">
+              {hostInitial}
+            </div>
+            <div className="host-info">
+              <span className="host-name">
+                {hostName}
+                {isHostVerified && (
+                  <svg className="verified-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                  </svg>
+                )}
+              </span>
+            </div>
           </div>
-        )}
 
-        {/* Additional Features (SQFT if available) */}
-        {listing.features.sqftArea && (
-          <div className="listing-sqft">
-            {listing.features.sqftArea} sq ft
+          {/* Pricing */}
+          <div className="pricing-section">
+            <div className="starting-price">
+              <span>Starting at {priceText}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </div>
+            <div className="current-price">{formatPrice(originalPrice)}/night</div>
+            <div className="availability-message">Message Split Lease for Availability</div>
           </div>
-        )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="action-buttons">
+          <button className="action-button secondary" onClick={handleSendMessage}>
+            Send Message
+          </button>
+          <button className="action-button primary" onClick={handleViewProposal}>
+            View Proposal
+          </button>
+        </div>
       </div>
     </div>
   );

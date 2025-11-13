@@ -1,21 +1,22 @@
 /**
  * FavoriteListingsPage Enhanced Component
- * Main page with Header, Footer, Map, and Filter section
+ * Main page with HeaderAuthenticated, Footer, Map, and Split Schedule Selector
  * Includes dynamic pricing based on date selection
+ * Enhanced with Bubble.io-style components
  */
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Listing } from '../types/listing.types';
-import type { DateRange } from '../components/FilterSection';
-import Header from '../components/shared/Header';
+import HeaderAuthenticated from '../components/shared/HeaderAuthenticated';
 import Footer from '../components/shared/Footer';
 import ListingCard from '../components/ListingCard';
 import EmptyState from '../components/EmptyState';
 import MapView from '../components/MapView';
-import FilterSection from '../components/FilterSection';
+import SplitScheduleSelector, { type ScheduleSelection } from '../components/SplitScheduleSelector';
 import { bubbleApi } from '../services/api';
 import '../styles/FavoriteListingsPage.css';
+import '../styles/FavoriteListingsPageEnhanced.css';
 
 // Mock user ID - in production, this would come from authentication context
 const CURRENT_USER_ID = 'current-user-id';
@@ -30,10 +31,11 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(true);
   const [selectedListingId, setSelectedListingId] = useState<string | undefined>();
-  const [dateRange, setDateRange] = useState<DateRange>({
+  const [schedule, setSchedule] = useState<ScheduleSelection>({
     checkIn: new Date().toISOString().split('T')[0],
     checkOut: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-    nights: 1
+    nights: 1,
+    daysOfWeek: [1, 2, 3] // Monday to Wednesday
   });
 
   /**
@@ -53,7 +55,7 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
   };
 
   /**
-   * Update listings with dynamic pricing when date range changes
+   * Update listings with dynamic pricing when schedule changes
    */
   useEffect(() => {
     if (listings.length > 0) {
@@ -63,13 +65,13 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
           ...listing.pricingList,
           startingNightlyPrice: calculateDynamicPrice(
             listing.listerPriceDisplay,
-            dateRange.nights
+            schedule.nights
           )
         }
       }));
       setDisplayedListings(updatedListings);
     }
-  }, [listings, dateRange]);
+  }, [listings, schedule]);
 
   /**
    * WORKFLOW: Page is Loaded
@@ -103,10 +105,10 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
   }, []);
 
   /**
-   * Handle date range change from filter section
+   * Handle schedule change from Split Schedule Selector
    */
-  const handleDateRangeChange = (newDateRange: DateRange) => {
-    setDateRange(newDateRange);
+  const handleScheduleChange = (newSchedule: ScheduleSelection) => {
+    setSchedule(newSchedule);
   };
 
   /**
@@ -161,7 +163,7 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
   if (loading && listings.length === 0) {
     return (
       <div className="page-with-header-footer">
-        <Header />
+        <HeaderAuthenticated />
         <div className="main-content-with-header">
           <div className="favorite-listings-page">
             <div className="loading-container">
@@ -179,7 +181,7 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
   if (error && listings.length === 0) {
     return (
       <div className="page-with-header-footer">
-        <Header />
+        <HeaderAuthenticated />
         <div className="main-content-with-header">
           <div className="favorite-listings-page">
             <div className="error-container">
@@ -199,7 +201,7 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
   if (displayedListings.length === 0) {
     return (
       <div className="page-with-header-footer">
-        <Header />
+        <HeaderAuthenticated />
         <div className="main-content-with-header">
           <div className="favorite-listings-page">
             <EmptyState
@@ -217,37 +219,23 @@ const FavoriteListingsPageEnhanced: React.FC = () => {
   // Main content with side-by-side layout
   return (
     <div className="page-with-header-footer">
-      <Header />
+      <HeaderAuthenticated
+        userName="Rod"
+        activeProposalsCount={2}
+        notificationsCount={9}
+      />
 
       <div className="main-content-with-header">
         <div className="favorite-listings-page-enhanced">
           {/* Left Panel: Listings */}
           <div className="listings-panel">
             <div className="listings-panel-inner">
-              {/* Page Header */}
-              <div className="page-header-enhanced">
-                <div>
-                  <h1 className="page-title">Your Favorite Listings</h1>
-                  <p className="page-subtitle">{displayedListings.length} properties saved</p>
-                </div>
-                <button className="toggle-map-btn" onClick={handleToggleMap}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                    <line x1="8" y1="2" x2="8" y2="18"></line>
-                    <line x1="16" y1="6" x2="16" y2="22"></line>
-                  </svg>
-                  {showMap ? 'Hide Map' : 'Show Map'}
-                </button>
-              </div>
-
-              {/* Filter Section */}
-              <div className="filter-section-wrapper">
-                <FilterSection
-                  onDateRangeChange={handleDateRangeChange}
-                  initialCheckIn={dateRange.checkIn}
-                  initialCheckOut={dateRange.checkOut}
-                />
-              </div>
+              {/* Split Schedule Selector */}
+              <SplitScheduleSelector
+                onScheduleChange={handleScheduleChange}
+                initialCheckIn={schedule.checkIn}
+                initialCheckOut={schedule.checkOut}
+              />
 
               {/* Listings Grid */}
               <div className="listings-section">
