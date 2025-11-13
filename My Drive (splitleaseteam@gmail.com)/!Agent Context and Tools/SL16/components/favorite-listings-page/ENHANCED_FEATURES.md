@@ -2,7 +2,16 @@
 
 ## 🎉 Major Enhancements Complete!
 
-The Favorite Listings page now includes all requested features: Header, Footer, Interactive Map with price pins, and Date Filter with dynamic pricing.
+The Favorite Listings page now includes all requested features: Header, Footer, Interactive Map with price pins, Date Filter with dynamic pricing, and **Side-by-Side Layout** matching Bubble.io implementation.
+
+## 🆕 Latest Update (January 2025)
+
+### **Side-by-Side Layout Implementation**
+- **Analyzed Bubble.io** favorite listings page using Playwright
+- **Implemented CSS Grid** layout with listings panel (left, 650px) and map panel (right, fills remaining space)
+- **Added Support Section** with quick-action icons (Live Chat, Email, Schedule Call, Browse FAQs)
+- **Full-height map** that remains visible while scrolling listings
+- **Responsive breakpoints** that switch to vertical stacking on tablet/mobile (< 1024px)
 
 ---
 
@@ -178,19 +187,29 @@ preview-enhanced.html
 
 ## 📱 Responsive Design
 
-### **Desktop (≥ 900px)**
+### **Desktop (≥ 1024px)** ⭐ NEW
+- **Side-by-side layout**: Listings panel (left, 650px) + Map panel (right, fills space)
+- **Full-height map**: Remains visible while scrolling listings
+- **Scrollable left panel**: Vertical scroll for listings and filters
 - Header: Full navigation with all links
-- Map: 600px height
-- Listings: Side-by-side photo/details
 - Filter: Horizontal layout
 - Footer: 5-column grid
+- Toggle map button: Hidden (map always visible)
 
-### **Mobile (< 900px)**
-- Header: Compact with "Host"/"Guest" labels
+### **Tablet (768px - 1023px)**
+- **Vertical stacking**: Map on top, listings below
 - Map: 400px height
+- Listings: Full width below map
+- Toggle map button: Visible
+- Filter: Adjusts to narrower width
+
+### **Mobile (< 768px)**
+- Header: Compact with "Host"/"Guest" labels
+- Map: 400px height (collapsible)
 - Listings: Stacked photo/details
 - Filter: Vertical layout
 - Footer: Single column
+- Toggle map button: Prominent
 
 ---
 
@@ -375,26 +394,64 @@ const icon = L.divIcon({
 
 ---
 
+## 📋 Bubble.io Layout Analysis
+
+A comprehensive analysis of the Bubble.io favorite listings page was conducted using Playwright. Key findings documented in `BUBBLE_LAYOUT_ANALYSIS.md`:
+
+### **Layout Differences Identified**
+1. ✅ **Side-by-side layout** (listings left, map right) - **IMPLEMENTED**
+2. ⏳ **Split Schedule selector** with weekly calendar (S M T W T F S)
+3. ⏳ **Enhanced listing cards** with proposal badges, host profiles, action buttons
+4. ⏳ **Authenticated header** variant with proposals button, notifications, user profile
+5. ✅ **Support quick-actions section** - **IMPLEMENTED**
+
+### **Visual Structure**
+```
+┌─────────────────────────────────────────────────────────┐
+│  Header (Logo | Proposals | Notifications | Profile)    │
+├──────────────────────────────┬──────────────────────────┤
+│  Split Schedule Selector     │                          │
+│  [S M T W T F S]             │                          │
+├──────────────────────────────┤      Map (Full Height)   │
+│  Listing Cards (Scrollable)  │                          │
+│  - Photo + Details           │      Price Pins          │
+│  - Proposal Badge            │                          │
+│  - Host Info                 │      Zoom Controls       │
+│  - Send Message / View       │                          │
+├──────────────────────────────┤                          │
+│  Support Quick Actions       │                          │
+│  [Chat | Email | Call | FAQ] │                          │
+└──────────────────────────────┴──────────────────────────┘
+```
+
+---
+
 ## 🚀 Next Steps / Future Enhancements
 
-1. **Add More Map Features**
+1. **Complete Bubble.io Parity**
+   - Split Schedule selector component (weekly calendar)
+   - Enhanced listing cards (proposal badges, host profiles)
+   - Authenticated header variant
+   - Google Maps integration (optional - requires API key)
+
+2. **Add More Map Features**
    - Clustering for many listings
    - Custom map styles
    - Drawing tools for area selection
 
-2. **Enhanced Filters**
+3. **Enhanced Filters**
    - Price range slider
    - Bedroom/bathroom filters
    - Location/neighborhood filter
    - Amenities checklist
 
-3. **Advanced Pricing**
+4. **Advanced Pricing**
    - Seasonal pricing
    - Weekend premiums
    - Holiday pricing
    - Last-minute discounts
 
-4. **User Features**
+5. **User Features**
    - Save search filters
    - Price alerts
    - Comparison view

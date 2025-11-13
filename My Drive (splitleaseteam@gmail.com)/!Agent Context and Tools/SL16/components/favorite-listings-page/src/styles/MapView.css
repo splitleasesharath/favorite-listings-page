@@ -1,15 +1,16 @@
 /**
  * MapView Styles
  * Styles for interactive map with price pins
+ * Full-height display for side-by-side layout
  */
 
 .map-view-container {
   position: relative;
   width: 100%;
-  height: 600px;
-  border-radius: 12px;
+  height: 100%;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
 }
 
 .map-view {

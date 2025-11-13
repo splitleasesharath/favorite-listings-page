@@ -1,6 +1,6 @@
 /**
  * FavoriteListingsPage Enhanced Styles
- * Includes spacing for header/footer and enhanced layout
+ * Side-by-side layout: Listings (left) + Map (right)
  */
 
 .page-with-header-footer {
@@ -12,13 +12,35 @@
 .main-content-with-header {
   flex: 1;
   margin-top: 80px; /* Space for fixed header */
-  padding-bottom: 40px;
+  height: calc(100vh - 80px);
+  overflow: hidden;
 }
 
 .favorite-listings-page-enhanced {
-  max-width: 1400px;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 650px 1fr;
+  height: 100%;
+  gap: 0;
+}
+
+/* Left Panel: Listings */
+.listings-panel {
+  overflow-y: auto;
+  height: 100%;
+  background: #F5F5F5;
+  padding: 0;
+}
+
+.listings-panel-inner {
   padding: 32px 24px;
+}
+
+/* Right Panel: Map */
+.map-panel {
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
+  overflow: hidden;
 }
 
 /* Enhanced Page Header */
@@ -29,6 +51,9 @@
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid #E0E0E0;
+  background: white;
+  padding: 20px 24px;
+  margin: 0;
 }
 
 .page-subtitle {
@@ -63,14 +88,23 @@
   flex-shrink: 0;
 }
 
-/* Map Section */
+/* Filter Section (inside left panel) */
+.filter-section-wrapper {
+  margin-bottom: 24px;
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Map Section (right panel) */
 .map-section {
-  margin-bottom: 32px;
+  height: 100%;
+  width: 100%;
 }
 
 /* Listings Section */
 .listings-section {
-  margin-top: 32px;
+  margin-top: 0;
 }
 
 .listings-section-title {
@@ -126,13 +160,86 @@
   line-height: 1.5;
 }
 
+/* Support Section */
+.support-section {
+  margin-top: 32px;
+  padding: 32px 24px;
+  background: white;
+  border-radius: 8px;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.support-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  background: #F0F4FF;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.support-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(62, 49, 97, 0.15);
+}
+
+.support-item svg {
+  width: 48px;
+  height: 48px;
+  color: #3E3161;
+  margin-bottom: 12px;
+}
+
+.support-item-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #424242;
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+}
+
 /* Mobile Responsive */
+@media (max-width: 1024px) {
+  .favorite-listings-page-enhanced {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .listings-panel {
+    order: 2;
+    height: auto;
+  }
+
+  .map-panel {
+    order: 1;
+    position: relative;
+    top: 0;
+    height: 400px;
+  }
+
+  .map-section {
+    height: 400px;
+  }
+
+  .toggle-map-btn {
+    display: flex;
+  }
+}
+
 @media (max-width: 900px) {
   .main-content-with-header {
     margin-top: 60px;
+    height: auto;
   }
 
-  .favorite-listings-page-enhanced {
+  .listings-panel-inner {
     padding: 16px;
   }
 
@@ -140,6 +247,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+    padding: 16px;
   }
 
   .toggle-map-btn {
@@ -154,5 +262,17 @@
   .pricing-info-note {
     flex-direction: column;
     gap: 8px;
+  }
+
+  .support-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Desktop: Hide toggle button when side-by-side */
+@media (min-width: 1025px) {
+  .toggle-map-btn {
+    display: none;
   }
 }
