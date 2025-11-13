@@ -1,0 +1,172 @@
+/**
+ * FilterSection Styles
+ * Date range filter component
+ */
+
+.filter-section {
+  margin-bottom: 32px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+}
+
+.filter-container {
+  max-width: 100%;
+}
+
+.filter-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #424242;
+  margin: 0 0 20px 0;
+  font-family: 'Lato', sans-serif;
+}
+
+.date-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.date-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.date-input-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666666;
+  font-family: 'Lato', sans-serif;
+}
+
+.date-input {
+  padding: 10px 14px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Lato', sans-serif;
+  transition: border-color 0.2s;
+  background: #FFFFFF;
+  color: #424242;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #3E3161;
+  box-shadow: 0 0 0 3px rgba(62, 49, 97, 0.1);
+}
+
+.date-input:hover {
+  border-color: #9DA9E8;
+}
+
+/* Nights Display */
+.nights-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: #F5F5F5;
+  border-radius: 8px;
+  min-width: 80px;
+}
+
+.nights-label {
+  font-size: 12px;
+  color: #666666;
+  font-weight: 500;
+  font-family: 'Lato', sans-serif;
+}
+
+.nights-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #3E3161;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Clear Button */
+.clear-dates-btn {
+  padding: 10px 20px;
+  background: #FFFFFF;
+  color: #666666;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Lato', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 42px;
+}
+
+.clear-dates-btn:hover {
+  background: #F5F5F5;
+  border-color: #CCCCCC;
+  color: #424242;
+}
+
+.clear-dates-btn:active {
+  transform: scale(0.98);
+}
+
+/* Filter Info */
+.filter-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #F0F4FF;
+  border-left: 4px solid #3E3161;
+  border-radius: 4px;
+}
+
+.filter-info svg {
+  color: #3E3161;
+  flex-shrink: 0;
+}
+
+.filter-info span {
+  font-size: 13px;
+  color: #424242;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .filter-section {
+    padding: 16px;
+  }
+
+  .filter-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .date-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-input-group {
+    min-width: 100%;
+  }
+
+  .nights-display {
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 100%;
+  }
+
+  .clear-dates-btn {
+    width: 100%;
+  }
+}

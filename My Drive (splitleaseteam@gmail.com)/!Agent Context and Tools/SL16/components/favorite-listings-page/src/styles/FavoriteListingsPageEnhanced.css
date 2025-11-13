@@ -1,0 +1,158 @@
+/**
+ * FavoriteListingsPage Enhanced Styles
+ * Includes spacing for header/footer and enhanced layout
+ */
+
+.page-with-header-footer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content-with-header {
+  flex: 1;
+  margin-top: 80px; /* Space for fixed header */
+  padding-bottom: 40px;
+}
+
+.favorite-listings-page-enhanced {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Enhanced Page Header */
+.page-header-enhanced {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: #666666;
+  margin: 4px 0 0 0;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Toggle Map Button */
+.toggle-map-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #3E3161;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.toggle-map-btn:hover {
+  background: #6C7FEB;
+}
+
+.toggle-map-btn svg {
+  flex-shrink: 0;
+}
+
+/* Map Section */
+.map-section {
+  margin-bottom: 32px;
+}
+
+/* Listings Section */
+.listings-section {
+  margin-top: 32px;
+}
+
+.listings-section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #424242;
+  margin: 0 0 20px 0;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Listing Highlighted (from map selection) */
+.listing-highlighted {
+  animation: highlight-pulse 1s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(62, 49, 97, 0.2);
+  }
+}
+
+/* Pricing Info Note */
+.pricing-info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 32px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #F0F4FF 0%, #E8EEFF 100%);
+  border-left: 4px solid #3E3161;
+  border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+}
+
+.pricing-info-note svg {
+  color: #3E3161;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pricing-info-note strong {
+  color: #3E3161;
+}
+
+.pricing-info-note div {
+  font-size: 14px;
+  color: #424242;
+  line-height: 1.5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .main-content-with-header {
+    margin-top: 60px;
+  }
+
+  .favorite-listings-page-enhanced {
+    padding: 16px;
+  }
+
+  .page-header-enhanced {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .toggle-map-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .listings-section-title {
+    font-size: 20px;
+  }
+
+  .pricing-info-note {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

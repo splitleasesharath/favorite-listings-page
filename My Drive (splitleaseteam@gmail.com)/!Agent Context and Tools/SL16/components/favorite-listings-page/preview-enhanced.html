@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Listings | Split Lease - Enhanced Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FFFFFF;
+            color: #424242;
+        }
+
+        /* Header Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #31135D;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            z-index: 9999;
+        }
+
+        .nav-container {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .explore-rentals-btn {
+            background: white;
+            color: rgb(109, 35, 207);
+            padding: 0.75rem 2.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 32px 24px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #424242;
+            margin: 0;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .toggle-map-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #3E3161;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin-bottom: 32px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 24px;
+        }
+
+        .filter-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .date-filters {
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        .date-input-group {
+            flex: 1;
+        }
+
+        .date-input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .nights-display {
+            background: #F5F5F5;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .nights-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3E3161;
+        }
+
+        /* Map Section */
+        .map-section {
+            margin-bottom: 32px;
+        }
+
+        #map {
+            height: 600px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .price-marker {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .price-pin {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .price-pin-content {
+            background: white;
+            color: #3E3161;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 2px solid #3E3161;
+        }
+
+        /* Listings */
+        .listings-section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 32px 0 20px 0;
+        }
+
+        .listings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .listing-card {
+            display: flex;
+            gap: 20px;
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .listing-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .listing-photo {
+            width: 300px;
+            height: 200px;
+            background: #F5F5F5;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .listing-details {
+            flex: 1;
+        }
+
+        .listing-location {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .listing-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3E3161;
+        }
+
+        .listing-name {
+            font-size: 20px;
+            margin: 8px 0;
+        }
+
+        /* Footer */
+        .main-footer {
+            background: #31135D;
+            color: white;
+            padding: 2rem 1.5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .pricing-info {
+            margin-top: 32px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #F0F4FF 0%, #E8EEFF 100%);
+            border-left: 4px solid #3E3161;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .listing-card {
+                flex-direction: column;
+            }
+            .listing-photo {
+                width: 100%;
+            }
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <nav class="nav-container">
+            <a href="https://splitlease.app" class="logo-text">Split Lease</a>
+            <div class="nav-center">
+                <a href="#" class="nav-link">Host with Us</a>
+                <a href="#" class="nav-link">Stay with Us</a>
+            </div>
+            <div style="display: flex; gap: 2rem; align-items: center;">
+                <a href="https://app.split.lease/search" class="explore-rentals-btn">Explore Rentals</a>
+                <a href="#" class="nav-link">Sign In</a>
+                <span style="color: white; opacity: 0.5;">|</span>
+                <a href="#" class="nav-link">Sign Up</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Your Favorite Listings</h1>
+                <p class="page-subtitle"><span id="listing-count">3</span> properties saved</p>
+            </div>
+            <button class="toggle-map-btn" onclick="toggleMap()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                </svg>
+                <span id="map-toggle-text">Hide Map</span>
+            </button>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h3 class="filter-title">Search Schedule</h3>
+            <div class="date-filters">
+                <div class="date-input-group">
+                    <label>Check-In</label>
+                    <input type="date" class="date-input" id="check-in" onchange="updatePricing()">
+                </div>
+                <div class="date-input-group">
+                    <label>Check-Out</label>
+                    <input type="date" class="date-input" id="check-out" onchange="updatePricing()">
+                </div>
+                <div class="nights-display">
+                    <div style="font-size: 12px; color: #666;">Nights:</div>
+                    <div class="nights-value" id="nights">1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section" id="map-section">
+            <div id="map"></div>
+        </div>
+
+        <!-- Listings -->
+        <h2 class="listings-section-title">All Favorites</h2>
+        <div class="listings-container" id="listings"></div>
+
+        <!-- Pricing Info -->
+        <div class="pricing-info">
+            <strong>Dynamic Pricing:</strong> Prices adjust based on your selected dates. Longer stays (7+ nights) receive discounts up to 20% off.
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>For Hosts</h4>
+                <a href="#">List Property Now</a>
+                <a href="#">How to List</a>
+                <a href="#">Legal Section</a>
+            </div>
+            <div class="footer-column">
+                <h4>For Guests</h4>
+                <a href="#">Explore Split Leases</a>
+                <a href="#">Success Stories</a>
+                <a href="#">View FAQ</a>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="#">About the Team</a>
+                <a href="#">Careers</a>
+                <a href="#">View Blog</a>
+            </div>
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        © 2025 SplitLease • Made with love in New York City
+    </div>
+
+    <script>
+        const mockListings = [
+            {
+                id: '1',
+                name: 'Spacious Brooklyn Loft with City Views',
+                location: { borough: 'Brooklyn', hood: 'Williamsburg', lat: 40.7081, lng: -73.9571 },
+                features: { qtyBedrooms: 2, qtyBathrooms: 2 },
+                basePrice: 189,
+                photo: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop'
+            },
+            {
+                id: '2',
+                name: 'Cozy Studio in Manhattan',
+                location: { borough: 'Manhattan', hood: 'East Village', lat: 40.7264, lng: -73.9818 },
+                features: { qtyBedrooms: 1, qtyBathrooms: 1 },
+                basePrice: 129,
+                photo: 'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=400&h=300&fit=crop'
+            },
+            {
+                id: '3',
+                name: 'Modern 3BR Apartment in Queens',
+                location: { borough: 'Queens', hood: 'Astoria', lat: 40.7614, lng: -73.9246 },
+                features: { qtyBedrooms: 3, qtyBathrooms: 2.5 },
+                basePrice: 249,
+                photo: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop'
+            }
+        ];
+
+        let map, markers = [];
+        let showMapView = true;
+
+        // Initialize dates
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('check-in').value = today.toISOString().split('T')[0];
+        document.getElementById('check-out').value = tomorrow.toISOString().split('T')[0];
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([40.7128, -74.0060], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            mockListings.forEach(listing => {
+                const price = calculatePrice(listing.basePrice, getNights());
+                const icon = L.divIcon({
+                    html: `<div class="price-pin"><div class="price-pin-content">$${price}</div></div>`,
+                    className: 'price-marker',
+                    iconSize: [60, 40]
+                });
+
+                const marker = L.marker([listing.location.lat, listing.location.lng], { icon })
+                    .addTo(map)
+                    .bindPopup(`<strong>${listing.name}</strong><br>$${price}/night`);
+
+                markers.push(marker);
+            });
+        }
+
+        function calculatePrice(basePrice, nights) {
+            if (nights >= 30) return Math.floor(basePrice * 0.8);
+            if (nights >= 7) return Math.floor(basePrice * 0.9);
+            return basePrice;
+        }
+
+        function getNights() {
+            const checkIn = new Date(document.getElementById('check-in').value);
+            const checkOut = new Date(document.getElementById('check-out').value);
+            return Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+        }
+
+        function updatePricing() {
+            const nights = getNights();
+            document.getElementById('nights').textContent = nights;
+
+            // Update listings
+            renderListings();
+
+            // Update map markers
+            markers.forEach((marker, i) => {
+                map.removeLayer(marker);
+                const listing = mockListings[i];
+                const price = calculatePrice(listing.basePrice, nights);
+                const icon = L.divIcon({
+                    html: `<div class="price-pin"><div class="price-pin-content">$${price}</div></div>`,
+                    className: 'price-marker',
+                    iconSize: [60, 40]
+                });
+                markers[i] = L.marker([listing.location.lat, listing.location.lng], { icon })
+                    .addTo(map)
+                    .bindPopup(`<strong>${listing.name}</strong><br>$${price}/night`);
+            });
+        }
+
+        function renderListings() {
+            const container = document.getElementById('listings');
+            const nights = getNights();
+
+            container.innerHTML = mockListings.map(listing => {
+                const price = calculatePrice(listing.basePrice, nights);
+                return `
+                    <div class="listing-card">
+                        <img src="${listing.photo}" class="listing-photo" alt="${listing.name}">
+                        <div class="listing-details">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span class="listing-location">${listing.location.borough}, ${listing.location.hood}</span>
+                                <span class="listing-price">$${price}/night</span>
+                            </div>
+                            <h3 class="listing-name">${listing.name}</h3>
+                            <p style="font-size: 14px; color: #666;">• ${listing.features.qtyBedrooms} bed • ${listing.features.qtyBathrooms} bath</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleMap() {
+            showMapView = !showMapView;
+            const mapSection = document.getElementById('map-section');
+            const toggleText = document.getElementById('map-toggle-text');
+
+            mapSection.style.display = showMapView ? 'block' : 'none';
+            toggleText.textContent = showMapView ? 'Hide Map' : 'Show Map';
+
+            if (showMapView && map) {
+                setTimeout(() => map.invalidateSize(), 100);
+            }
+        }
+
+        // Initialize
+        initMap();
+        renderListings();
+        updatePricing();
+    </script>
+</body>
+</html>
